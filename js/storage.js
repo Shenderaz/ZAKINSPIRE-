@@ -1,3 +1,14 @@
+import {
+  collection,
+  doc,
+  setDoc,
+  deleteDoc,
+  onSnapshot,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import { db } from "./firebase.js";
+
 const PREFIX = "zakinspired:";
 const FAVORITES_KEY = "favorites";
 const FAVORITES_CAP = 200;
@@ -34,25 +45,105 @@ export function cacheSet(key, value) {
   set(`cache:${key}`, { savedAt: Date.now(), value });
 }
 
-export function getFavorites() {
+let _favorites = readLocal();
+let _user = null;
+let _unsubFirestore = null;
+let _attachGen = 0;
+
+function readLocal() {
   return get(FAVORITES_KEY, []);
+}
+
+function writeLocal(list) {
+  set(FAVORITES_KEY, list);
+}
+
+function emit() {
+  bus.dispatchEvent(new Event("change"));
+}
+
+function docId(id) {
+  return encodeURIComponent(id);
+}
+
+function favoritesCol(uid) {
+  return collection(db, "users", uid, "favorites");
+}
+
+export async function attachUser(user) {
+  const myGen = ++_attachGen;
+
+  if (_unsubFirestore) {
+    _unsubFirestore();
+    _unsubFirestore = null;
+  }
+
+  _user = user;
+
+  if (!user) {
+    _favorites = readLocal();
+    emit();
+    return;
+  }
+
+  const local = readLocal();
+  if (local.length) {
+    try {
+      await Promise.all(
+        local.map(item =>
+          setDoc(doc(favoritesCol(user.uid), docId(item.id)), item, { merge: true })
+        )
+      );
+      if (myGen !== _attachGen) return;
+      writeLocal([]);
+    } catch (err) {
+      console.error("Failed to merge local favorites into cloud:", err);
+      if (myGen !== _attachGen) return;
+    }
+  }
+
+  const q = query(favoritesCol(user.uid), orderBy("savedAt", "desc"));
+  _unsubFirestore = onSnapshot(
+    q,
+    snap => {
+      if (myGen !== _attachGen) return;
+      _favorites = snap.docs.map(d => d.data());
+      emit();
+    },
+    err => console.error("Favorites snapshot error:", err)
+  );
+}
+
+export function getFavorites() {
+  return _favorites.slice();
 }
 
 export function addFavorite(item) {
   if (!item?.id) return false;
-  const list = getFavorites();
-  if (list.some(f => f.id === item.id)) return false;
-  list.unshift({ ...item, savedAt: Date.now() });
-  if (list.length > FAVORITES_CAP) list.length = FAVORITES_CAP;
-  set(FAVORITES_KEY, list);
-  bus.dispatchEvent(new Event("change"));
+  if (_favorites.some(f => f.id === item.id)) return false;
+  const entry = { ...item, savedAt: Date.now() };
+
+  if (_user) {
+    setDoc(doc(favoritesCol(_user.uid), docId(item.id)), entry)
+      .catch(err => console.error("Add favorite failed:", err));
+  } else {
+    _favorites = [entry, ...readLocal().filter(f => f.id !== item.id)];
+    if (_favorites.length > FAVORITES_CAP) _favorites.length = FAVORITES_CAP;
+    writeLocal(_favorites);
+    emit();
+  }
   return true;
 }
 
 export function removeFavorite(id) {
-  const next = getFavorites().filter(f => f.id !== id);
-  set(FAVORITES_KEY, next);
-  bus.dispatchEvent(new Event("change"));
+  if (_user) {
+    deleteDoc(doc(favoritesCol(_user.uid), docId(id)))
+      .catch(err => console.error("Remove favorite failed:", err));
+  } else {
+    _favorites = readLocal().filter(f => f.id !== id);
+    writeLocal(_favorites);
+    emit();
+  }
 }
 
 export function onFavoritesChange(handler) {

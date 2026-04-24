@@ -1,0 +1,33 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDE
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Firebase — never commit admin/service credentials
+*firebase-adminsdk*.json
+serviceAccountKey*.json
+.firebase/
+firebase-debug.log
+
+# Generated at runtime from .env
+js/firebase-config.js
+
+# Claude Code
+.claude/settings.local.json

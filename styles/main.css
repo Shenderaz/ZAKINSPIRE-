@@ -88,7 +88,8 @@ button:hover { transform: translateY(-1px); }
 button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
-.like-btn.is-liked { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+.like-btn.is-liked { background: #e11d48; color: #fff; border-color: #e11d48; }
+.like-btn.is-liked:hover { background: #be123c; border-color: #be123c; }
 
 .app {
   flex: 1;
@@ -141,7 +142,164 @@ button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
   to { opacity: 1; transform: translateY(0); }
 }
 
+.auth-user {
+  font-size: 0.9rem;
+  color: var(--muted);
+  padding: 0 var(--space-1);
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  z-index: 10;
+  animation: fade 200ms ease;
+}
+
+.modal[hidden] { display: none; }
+
+.modal__panel {
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-3);
+  width: min(420px, 100%);
+  position: relative;
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+.modal__close:hover { color: var(--text); transform: none; }
+
+.modal__title {
+  font-family: var(--font-display);
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+.modal__subtitle {
+  margin: 0 0 var(--space-2);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.modal__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: var(--space-2) 0;
+}
+.modal__divider::before,
+.modal__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: 0.65rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+.btn-google__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4285f4, #ea4335 45%, #fbbc04 75%, #34a853);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.auth-form { display: flex; flex-direction: column; gap: var(--space-1); }
+.auth-field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.9rem; }
+.auth-field span { color: var(--muted); }
+.auth-field input {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+}
+.auth-field input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.auth-error {
+  margin: 0;
+  min-height: 1.2em;
+  color: #e11d48;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--surface);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.btn-primary:disabled { opacity: 0.6; }
+
+.auth-toggle {
+  text-align: center;
+  margin: var(--space-2) 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.auth-toggle__btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-left: 0.25rem;
+  color: var(--accent);
+  font-weight: 500;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+.auth-toggle__btn:hover { text-decoration: underline; transform: none; }
+.auth-toggle__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 @media (max-width: 480px) {
   .site-header { flex-direction: column; gap: var(--space-2); align-items: flex-start; }
   .card { font-size: 1.2rem; padding: var(--space-3); }
+  .auth-user { max-width: 20ch; }
 }
