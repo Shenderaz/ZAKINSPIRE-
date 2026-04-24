@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Zakinspired — daily inspirational quotes and Bible verses." />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Zakinspired</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">Zakinspired</h1>
+    <nav class="site-nav" aria-label="Primary">
+      <button id="nav-quote" type="button" aria-pressed="true">Quote</button>
+      <button id="nav-verse" type="button" aria-pressed="false">Verse</button>
+      <button id="nav-favorites" type="button" aria-pressed="false">Favorites</button>
+      <button id="theme-toggle" type="button" aria-label="Toggle dark mode">Theme</button>
+    </nav>
+  </header>
+
+  <main id="app" class="app" aria-live="polite">
+    <section id="quote-view" class="view" aria-labelledby="quote-heading">
+      <h2 id="quote-heading" class="visually-hidden" tabindex="-1">Daily quote</h2>
+      <article id="quote-card" class="card card--quote"></article>
+      <div class="actions">
+        <button id="new-quote" type="button">New quote</button>
+        <button id="save-quote" class="like-btn" type="button" aria-pressed="false">Like</button>
+      </div>
+    </section>
+
+    <section id="verse-view" class="view" hidden aria-labelledby="verse-heading">
+      <h2 id="verse-heading" class="visually-hidden" tabindex="-1">Bible verse</h2>
+      <article id="verse-card" class="card card--verse"></article>
+      <div class="actions">
+        <button id="new-verse" type="button">New verse</button>
+        <button id="save-verse" class="like-btn" type="button" aria-pressed="false">Like</button>
+      </div>
+    </section>
+
+    <section id="favorites-view" class="view" hidden aria-labelledby="favorites-heading">
+      <h2 id="favorites-heading" tabindex="-1">Favorites</h2>
+      <ul id="favorites-list" class="favorites-list"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>Quotes via dummyjson.com · Verses via bible-api.com</small>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
