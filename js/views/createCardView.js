@@ -13,8 +13,9 @@ export function createCardView({ cardId, newBtnId, saveBtnId, kind, fetcher, ren
 
   function syncLikeBtn() {
     const liked = isLiked();
-    likeBtn.textContent = liked ? "Liked" : "Like";
     likeBtn.setAttribute("aria-pressed", liked ? "true" : "false");
+    likeBtn.setAttribute("aria-label", liked ? "Remove from favorites" : "Add to favorites");
+    likeBtn.setAttribute("title", liked ? "Remove from favorites" : "Add to favorites");
     likeBtn.classList.toggle("is-liked", liked);
     likeBtn.disabled = current == null;
   }

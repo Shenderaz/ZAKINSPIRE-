@@ -17,7 +17,10 @@ export function initFavoritesView() {
     if (btn) removeFavorite(btn.dataset.id);
   });
 
-  onFavoritesChange(() => { dirty = true; });
+  onFavoritesChange(() => {
+    if (!byId("favorites-view").hidden) refresh();
+    else dirty = true;
+  });
 
   document.addEventListener("view:change", e => {
     if (e.detail.name === VIEW.FAVORITES && dirty) refresh();

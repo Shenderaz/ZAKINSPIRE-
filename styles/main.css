@@ -88,8 +88,38 @@ button:hover { transform: translateY(-1px); }
 button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
-.like-btn.is-liked { background: #e11d48; color: #fff; border-color: #e11d48; }
-.like-btn.is-liked:hover { background: #be123c; border-color: #be123c; }
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.like-btn:hover { transform: scale(1.08); }
+.like-btn:active { transform: scale(0.95); }
+.like-btn[aria-pressed="true"] { border-color: #e11d48; color: #e11d48; }
+
+.heart-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: #e11d48;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: fill var(--transition), transform var(--transition);
+}
+.like-btn.is-liked { background: #fff1f3; border-color: #e11d48; }
+.like-btn.is-liked .heart-icon { fill: #e11d48; animation: heart-pop 280ms ease; }
+[data-theme="dark"] .like-btn.is-liked { background: rgba(225, 29, 72, 0.15); }
+
+@keyframes heart-pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
 
 .app {
   flex: 1;
@@ -128,6 +158,30 @@ button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
   border-radius: var(--radius);
   padding: var(--space-2);
   margin-bottom: var(--space-1);
+}
+
+.favorites-list .remove {
+  display: block;
+  margin-top: var(--space-3);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  border-radius: 999px;
+  background: transparent;
+  color: #e11d48;
+  border-color: #e11d48;
+  font-weight: 600;
+}
+.favorites-list .remove:hover {
+  background: #e11d48;
+  color: #fff;
+  border-color: #e11d48;
+  transform: none;
+}
+.favorites-list .remove:active { transform: scale(0.97); }
+.favorites-list .remove:focus-visible {
+  outline: 2px solid #e11d48;
+  outline-offset: 2px;
 }
 
 .site-footer {
