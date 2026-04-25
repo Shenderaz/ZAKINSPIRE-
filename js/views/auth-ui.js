@@ -100,13 +100,19 @@ export function initAuthUI() {
     }
   }
 
+  function firstName(user) {
+    if (user.displayName) return user.displayName.trim().split(/\s+/)[0];
+    if (user.email) return user.email.split("@")[0];
+    return "Signed in";
+  }
+
   function renderUser() {
     const user = getCurrentUser();
     if (user) {
       signInBtn.hidden = true;
       signOutBtn.hidden = false;
       userLabel.hidden = false;
-      userLabel.textContent = user.displayName || user.email || "Signed in";
+      userLabel.textContent = firstName(user);
     } else {
       signInBtn.hidden = false;
       signOutBtn.hidden = true;

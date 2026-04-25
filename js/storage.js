@@ -8,6 +8,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase.js";
+import { showToast } from "./toast.js";
 
 const PREFIX = "zakinspired:";
 const FAVORITES_KEY = "favorites";
@@ -110,7 +111,10 @@ export async function attachUser(user) {
       _favorites = snap.docs.map(d => d.data());
       emit();
     },
-    err => console.error("Favorites snapshot error:", err)
+    err => {
+      console.error("Favorites snapshot error:", err);
+      showToast("Couldn't sync favorites: " + (err?.message || err));
+    }
   );
 }
 
@@ -124,8 +128,15 @@ export function addFavorite(item) {
   const entry = { ...item, savedAt: Date.now() };
 
   if (_user) {
+    _favorites = [entry, ..._favorites];
+    emit();
     setDoc(doc(favoritesCol(_user.uid), docId(item.id)), entry)
-      .catch(err => console.error("Add favorite failed:", err));
+      .catch(err => {
+        console.error("Add favorite failed:", err);
+        _favorites = _favorites.filter(f => f.id !== item.id);
+        emit();
+        showToast("Couldn't save: " + (err?.message || err));
+      });
   } else {
     _favorites = [entry, ...readLocal().filter(f => f.id !== item.id)];
     if (_favorites.length > FAVORITES_CAP) _favorites.length = FAVORITES_CAP;
@@ -137,8 +148,17 @@ export function addFavorite(item) {
 
 export function removeFavorite(id) {
   if (_user) {
+    const removed = _favorites.find(f => f.id === id);
+    if (!removed) return;
+    _favorites = _favorites.filter(f => f.id !== id);
+    emit();
     deleteDoc(doc(favoritesCol(_user.uid), docId(id)))
-      .catch(err => console.error("Remove favorite failed:", err));
+      .catch(err => {
+        console.error("Remove favorite failed:", err);
+        _favorites = [removed, ..._favorites];
+        emit();
+        showToast("Couldn't remove: " + (err?.message || err));
+      });
   } else {
     _favorites = readLocal().filter(f => f.id !== id);
     writeLocal(_favorites);
