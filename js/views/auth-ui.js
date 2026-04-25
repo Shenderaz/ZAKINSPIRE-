@@ -116,6 +116,10 @@ export function initAuthUI() {
   }
 
   signInBtn.addEventListener("click", openModal);
+  document.addEventListener("auth:require", () => {
+    setMode("signin");
+    openModal();
+  });
   closeBtn.addEventListener("click", closeModal);
   modal.addEventListener("click", e => {
     if (e.target === modal) closeModal();

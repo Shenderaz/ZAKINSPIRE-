@@ -55,14 +55,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-2) var(--space-3);
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding: var(--space-2) clamp(1rem, 3vw, var(--space-3));
   border-bottom: 1px solid var(--border);
 }
 
 .site-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.75rem;
+  font-size: clamp(1.4rem, 1rem + 1.5vw, 1.75rem);
   margin: 0;
 }
 
@@ -70,6 +72,7 @@ body {
   display: flex;
   gap: var(--space-1);
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 button {
@@ -125,7 +128,7 @@ button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
   flex: 1;
   width: min(720px, 100%);
   margin: 0 auto;
-  padding: var(--space-4) var(--space-3);
+  padding: clamp(var(--space-2), 4vw, var(--space-4)) clamp(1rem, 4vw, var(--space-3));
 }
 
 .view { animation: fade 300ms ease; }
@@ -134,11 +137,11 @@ button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: var(--space-4);
+  padding: clamp(var(--space-3), 5vw, var(--space-4));
   box-shadow: var(--shadow);
   margin-bottom: var(--space-3);
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: clamp(1.15rem, 0.9rem + 1.2vw, 1.5rem);
   line-height: 1.5;
 }
 
@@ -149,6 +152,8 @@ button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
   display: flex;
   gap: var(--space-1);
   justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .favorites-list { list-style: none; padding: 0; margin: 0; }
@@ -352,8 +357,29 @@ button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent);
   border-radius: 2px;
 }
 
-@media (max-width: 480px) {
-  .site-header { flex-direction: column; gap: var(--space-2); align-items: flex-start; }
-  .card { font-size: 1.2rem; padding: var(--space-3); }
+@media (max-width: 600px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .site-nav {
+    width: 100%;
+    justify-content: flex-start;
+  }
   .auth-user { max-width: 20ch; }
+  .favorites-list .remove {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  button { padding: 0.5rem 0.8rem; font-size: 0.9rem; }
+  .like-btn { padding: 0.4rem; }
+  .site-nav { gap: 0.35rem; }
+}
+
+@media (min-width: 900px) {
+  .app { padding-top: var(--space-4); }
+  .card { padding: var(--space-4); }
 }
